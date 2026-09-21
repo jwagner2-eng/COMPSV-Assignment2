@@ -6,9 +6,10 @@ class Node:
         name (str): The name of the customer.
         next (Node): A reference to the next node in the list.
     '''
-    
-    
 
+    def __init__(self, name):
+        self.name = name
+        self.next = None
 
 
 # Create a LinkedList class to manage the waitlist
@@ -23,13 +24,66 @@ class LinkedList:
         remove(name): Removes a customer from the waitlist by name.
         print_list(): Prints the current waitlist.
     '''
-    
+
+    def __init__(self):
+        self.head = None
+
+    def add_front(self, name):
+        new_node = Node(name)
+        new_node.next = self.head
+        self.head = new_node
+        return f"{name} added to the front of the waitlist"
+
+    def add_end(self, name):
+        new_node = Node(name)
+
+        if self.head is None:
+            self.head = new_node
+        else:
+            current = self.head
+
+            while current.next is not None:
+                current = current.next
+
+            current.next = new_node
+
+        return f"{name} added to the end of the waitlist"
+
+    def remove(self, name):
+        if self.head is None:
+            return f"{name} not found"
+
+        if self.head.name == name:
+            self.head = self.head.next
+            return f"Removed {name} from the waitlist"
+
+        current = self.head
+
+        while current.next is not None:
+            if current.next.name == name:
+                current.next = current.next.next
+                return f"Removed {name} from the waitlist"
+
+            current = current.next
+
+        return f"{name} not found"
+
+    def print_list(self):
+        if self.head is None:
+            print("The waitlist is empty")
+            return
+
+        current = self.head
+
+        while current is not None:
+            print(f"- {current.name}")
+            current = current.next
 
 
 def waitlist_generator():
     # Create a new linked list instance
-    
-    
+    waitlist = LinkedList()
+
     while True:
         print("\n--- Waitlist Manager ---")
         print("1. Add customer to front")
@@ -37,43 +91,65 @@ def waitlist_generator():
         print("3. Remove customer by name")
         print("4. Print waitlist")
         print("5. Exit")
-        
+
         choice = input("Choose an option (1–5): ")
-        
+
         if choice == "1":
             name = input("Enter customer name to add to front: ")
             # Call the add_front method
-            
+            print(waitlist.add_front(name))
 
         elif choice == "2":
             name = input("Enter customer name to add to end: ")
             # Call the add_end method
-            
+            print(waitlist.add_end(name))
 
         elif choice == "3":
             name = input("Enter customer name to remove: ")
             # Call the remove method
-            
-            
+            print(waitlist.remove(name))
+
         elif choice == "4":
             print("Current waitlist:")
             # Print out the entire linked list using the print_list method.
-            
-            
-            
+            waitlist.print_list()
 
         elif choice == "5":
             print("Exiting waitlist manager.")
             break
+
         else:
             print("Invalid option. Please choose 1–5.")
 
+
 # Call the waitlist_generator function to start the program
+waitlist_generator()
 
 
 '''
-Design Memo: Write Your Design Memo Include a 200–300 word response in your code or in a .txt file:
-- How does your list work?
-- What role does the head play?
-- When might a real engineer need a custom list like this?
+Design Memo:
+
+My linked list works by storing each customer inside a Node object. Each
+node contains the customer's name and a next pointer that connects it to
+the next customer in the waitlist. The LinkedList class manages these
+nodes and provides methods for adding customers to the front or end,
+removing customers by name, and printing everyone currently in the
+waitlist. When adding someone to the front, the new node points to the
+current first node. When adding someone to the end, the program moves
+through the nodes until it finds the last one and connects the new node
+there. Removing someone works by finding the matching node and changing
+the pointers so that the list skips over that node.
+
+The head is important because it points to the first node in the linked
+list. It gives the program a starting point for accessing the rest of
+the waitlist. If the head is None, then the waitlist is empty. The head
+also needs to change whenever a new customer is added to the front or
+the first customer is removed.
+
+A real engineer might use a custom linked structure when data needs to
+change frequently and they want direct control over how items are
+connected. Examples could include waitlists, task-management systems,
+or other applications where items are frequently added and removed.
+Building the structure manually can also allow engineers to customize
+its behavior for the specific needs of their application.
 '''
